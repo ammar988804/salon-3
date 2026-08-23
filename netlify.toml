@@ -1,0 +1,32 @@
+# Netlify build config.
+#
+# This app CANNOT be deployed as a folder of static files. The production
+# build reports 29 of its 31 routes as "ƒ (Dynamic) server-rendered on
+# demand", plus a Middleware (proxy.ts) that refreshes the Supabase session on
+# every request. There is no index.html to serve: pages are rendered per
+# request, server actions run on the server, and auth reads cookies. Netlify
+# therefore has to BUILD it and run it behind functions, which is exactly what
+# @netlify/plugin-nextjs sets up.
+#
+# publish is ".next" (the build output), not a static folder.
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[build.environment]
+  # Match the local toolchain. Next 16 requires Node 18.18+; 20 is the safe LTS.
+  NODE_VERSION = "20"
+
+# Required environment variables, set in the Netlify UI under
+# Site configuration > Environment variables. NEVER commit these:
+#
+#   NEXT_PUBLIC_SUPABASE_URL        - Supabase project URL
+#   NEXT_PUBLIC_SUPABASE_ANON_KEY   - public anon key (safe in the browser)
+#   SUPABASE_SERVICE_ROLE_KEY       - SECRET. Bypasses every RLS policy.
+#                                     Server-side only, never NEXT_PUBLIC_*.
+#   NEXT_PUBLIC_SITE_URL            - the live site URL, e.g.
+#                                     https://your-salon.netlify.app

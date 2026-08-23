@@ -1,0 +1,6 @@
+# Every file in this project is LF, and mixed endings here have caused real
+# damage before (a tool silently rewrote merged_migrations.sql to CRLF).
+# Git for Windows defaults to converting to CRLF on checkout, which would
+# rewrite all ~170 files and bury every real change in whitespace noise.
+# Pinning LF keeps the working copy matching what's committed on any machine.
+* text=auto eol=lf
